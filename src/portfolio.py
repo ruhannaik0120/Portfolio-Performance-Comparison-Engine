@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from src.metrics import compute_risk_parity_weights
 
 def calculate_daily_returns(price_data):
     """
@@ -133,3 +134,96 @@ def monthly_rebalanced_portfolio(returns, weights):
 
     return pd.Series(portfolio_values, index=returns.index)
 
+def walk_forward_rp_vol_targeted(
+    returns,
+    lookback=252,
+    target_vol=0.15,
+    vol_window=30,
+    transaction_cost_rate=0.001,
+    max_leverage=1.0
+):
+    """
+    Walk-forward Risk Parity with:
+    - Rolling covariance estimation (lookback window)
+    - Monthly rebalancing
+    - Daily volatility targeting
+    - Transaction cost modeling
+
+    Parameters:
+        returns (DataFrame): asset returns
+        lookback (int): rolling window for covariance estimation
+        target_vol (float): annual volatility target
+        vol_window (int): rolling window for realized portfolio vol
+        transaction_cost_rate (float): cost per unit turnover
+        max_leverage (float): maximum scaling factor (1.0 = no leverage)
+
+    Returns:
+        portfolio_returns (Series)
+        total_turnover (float)
+    """
+    portfolio_returns = []
+    total_turnover = 0
+
+    prev_weights = None
+    current_weights = None
+
+    # Identify month-end rebalance dates
+    rebalance_dates = returns.groupby(
+        returns.index.to_period("M")
+    ).tail(1).index
+
+    for i in range(len(returns)):
+
+        date = returns.index[i]
+
+        # --- Rebalance monthly using past data only ---
+        if date in rebalance_dates and i >= lookback:
+
+            window_data = returns.iloc[i - lookback:i]
+
+            new_weights = compute_risk_parity_weights(window_data)
+
+            # Transaction cost (if not first allocation)
+            if prev_weights is not None:
+                turnover = np.sum(np.abs(new_weights - prev_weights))
+                total_turnover += turnover
+            else:
+                turnover = 0
+
+            current_weights = new_weights
+            prev_weights = new_weights
+
+        # Skip until first allocation is available
+        if current_weights is None:
+            portfolio_returns.append(0)
+            continue
+
+        # --- Compute daily portfolio return ---
+        daily_return = returns.iloc[i].dot(current_weights)
+
+        # --- Apply transaction cost on rebalance day ---
+        if date in rebalance_dates and i >= lookback:
+            daily_return -= transaction_cost_rate * turnover
+
+        # --- Volatility targeting ---
+        temp_series = pd.Series(portfolio_returns + [daily_return])
+        rolling_vol = temp_series.rolling(vol_window).std() * np.sqrt(252)
+
+        realized_vol = rolling_vol.iloc[-1]
+
+        if not np.isnan(realized_vol) and realized_vol > 0:
+            scale = target_vol / realized_vol
+            scale = min(scale, max_leverage)   # Cap leverage
+        else:
+            scale = 1.0
+
+        daily_return *= scale
+
+        portfolio_returns.append(daily_return)
+
+    portfolio_returns = pd.Series(
+        portfolio_returns,
+        index=returns.index
+    )
+
+    return portfolio_returns, total_turnover
