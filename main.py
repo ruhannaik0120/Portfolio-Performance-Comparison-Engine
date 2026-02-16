@@ -26,7 +26,7 @@ from src.strategies import (
     walk_forward_risk_parity_strategy,
     regime_switching_strategy,
 )
-
+from src.factors import market_factor_analysis
 
 # ------------------------------------------------------------------
 # Research mode helpers
@@ -113,6 +113,26 @@ if __name__ == "__main__":
     print(f"\nWalk-Forward RP (Integrated) Total Turnover: {wf_m['Total Turnover']:.4f}")
     print("\n======================================================")
 
+    # Factor Analysis (CAPM)
+    nifty_prices = fetch_stock_data(["^NSEI"], START_DATE, END_DATE)
+    nifty_returns = calculate_daily_returns(nifty_prices).squeeze()
+
+    print("\nFactor Analysis (vs NIFTY):")
+    factor_rows = {}
+    factor_strategies = {
+        "Equal Weight": eq_port,
+        "Static RP": rp_port,
+        "Vol-Targeted RP": vt_port,
+        "Walk-Forward RP (Integrated)": wf_port
+    }
+    for name, strategy_returns in factor_strategies.items():
+        factor_rows[name] = market_factor_analysis(strategy_returns, nifty_returns)
+
+    factor_df = pd.DataFrame(factor_rows).T
+    factor_df.columns = ["Alpha (Ann.)", "Beta", "R-squared"]
+    print(factor_df.to_string(float_format="{:.4f}".format))
+    print()
+
     # 4. Product charts (2 only)
     fig, axes = plt.subplots(2, 1, figsize=(12, 10), sharex=True)
 
@@ -139,7 +159,7 @@ if __name__ == "__main__":
 
     # 5. Research mode (optional)
     if RUN_RESEARCH_MODE:
-        nifty_prices = fetch_stock_data(["^NSEI"], START_DATE, END_DATE)
-        nifty_returns = calculate_daily_returns(nifty_prices).squeeze()
         run_research_analysis(returns, nifty_returns, rp_m["weights"])
+
+    
  
