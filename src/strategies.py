@@ -48,10 +48,13 @@ def _metrics_dict(port_returns, cum_returns):
 
 def equal_weight_strategy(returns):
     """Equal-weight daily-rebalanced benchmark."""
+    n = returns.shape[1]
+    weights = np.ones(n) / n
     port = equal_weight_portfolio(returns)
     cum = cumulative_returns(port)
     dd = drawdown_series(cum)
-    return port, cum, dd, _metrics_dict(port, cum)
+    weights_df = pd.DataFrame({"Weight": weights}, index=returns.columns)
+    return port, cum, dd, _metrics_dict(port, cum), weights_df
 
 
 def static_risk_parity_strategy(returns):
@@ -60,9 +63,8 @@ def static_risk_parity_strategy(returns):
     port = custom_weight_portfolio(returns, rp_weights)
     cum = cumulative_returns(port)
     dd = drawdown_series(cum)
-    metrics = _metrics_dict(port, cum)
-    metrics["weights"] = rp_weights
-    return port, cum, dd, metrics
+    weights_df = pd.DataFrame({"Weight": rp_weights}, index=returns.columns)
+    return port, cum, dd, _metrics_dict(port, cum), weights_df
 
 
 def vol_targeted_risk_parity_strategy(returns, target_vol=0.15):
@@ -80,7 +82,8 @@ def vol_targeted_risk_parity_strategy(returns, target_vol=0.15):
     port = pd.Series(scaled, index=rp_port.index)
     cum = cumulative_returns(port)
     dd = drawdown_series(cum)
-    return port, cum, dd, _metrics_dict(port, cum)
+    weights_df = pd.DataFrame({"Weight": rp_weights}, index=returns.columns)
+    return port, cum, dd, _metrics_dict(port, cum), weights_df
 
 
 def walk_forward_risk_parity_strategy(returns, lookback=252, target_vol=0.15, transaction_cost=0.001, max_leverage=1.0):
@@ -93,7 +96,7 @@ def walk_forward_risk_parity_strategy(returns, lookback=252, target_vol=0.15, tr
     dd = drawdown_series(cum)
     metrics = _metrics_dict(port, cum)
     metrics["Total Turnover"] = turnover
-    return port, cum, dd, metrics
+    return port, cum, dd, metrics, None
 
 
 # ------------------------------------------------------------------

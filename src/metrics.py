@@ -19,6 +19,8 @@ def annualized_volatility(portfolio_returns, trading_days=252):
 def sharpe_ratio(portfolio_returns, risk_free_rate=0.0, trading_days=252):
     ann_return = annualized_return(portfolio_returns, trading_days)
     ann_vol = annualized_volatility(portfolio_returns, trading_days)
+    if ann_vol == 0:
+        return 0.0
     return (ann_return - risk_free_rate) / ann_vol
 
 def max_drawdown(cumulative_returns):
@@ -123,5 +125,13 @@ def compute_risk_parity_weights(returns):
                       method='SLSQP',
                       bounds=bounds,
                       constraints=constraints)
+
+    if not result.success:
+        import warnings
+        warnings.warn(
+            f"Risk parity optimizer did not converge: {result.message}. "
+            "Falling back to equal weights."
+        )
+        return np.ones(n) / n
 
     return result.x

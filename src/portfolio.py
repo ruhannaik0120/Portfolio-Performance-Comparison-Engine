@@ -160,7 +160,16 @@ def walk_forward_rp_vol_targeted(
     Returns:
         portfolio_returns (Series)
         total_turnover (float)
+
+    Raises:
+        ValueError: If data has fewer rows than lookback window.
     """
+    if len(returns) < lookback:
+        raise ValueError(
+            f"Not enough data for walk-forward: {len(returns)} rows but lookback is {lookback}. "
+            "Use a shorter lookback or a wider date range."
+        )
+
     portfolio_returns = []
     total_turnover = 0
 

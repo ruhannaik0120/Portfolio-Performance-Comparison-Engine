@@ -89,10 +89,10 @@ if __name__ == "__main__":
     returns = calculate_daily_returns(prices)
 
     # 2. Run strategies
-    eq_port, eq_cum, eq_dd, eq_m = equal_weight_strategy(returns)
-    rp_port, rp_cum, rp_dd, rp_m = static_risk_parity_strategy(returns)
-    vt_port, vt_cum, vt_dd, vt_m = vol_targeted_risk_parity_strategy(returns, TARGET_VOL)
-    wf_port, wf_cum, wf_dd, wf_m = walk_forward_risk_parity_strategy(
+    eq_port, eq_cum, eq_dd, eq_m, eq_w = equal_weight_strategy(returns)
+    rp_port, rp_cum, rp_dd, rp_m, rp_w = static_risk_parity_strategy(returns)
+    vt_port, vt_cum, vt_dd, vt_m, vt_w = vol_targeted_risk_parity_strategy(returns, TARGET_VOL)
+    wf_port, wf_cum, wf_dd, wf_m, wf_w = walk_forward_risk_parity_strategy(
         returns, LOOKBACK_WINDOW, TARGET_VOL, TRANSACTION_COST, MAX_LEVERAGE,
     )
 
@@ -159,7 +159,7 @@ if __name__ == "__main__":
 
     # 5. Research mode (optional)
     if RUN_RESEARCH_MODE:
-        run_research_analysis(returns, nifty_returns, rp_m["weights"])
+        run_research_analysis(returns, nifty_returns, rp_w["Weight"].values)
 
     
  
