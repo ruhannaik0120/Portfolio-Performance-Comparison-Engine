@@ -38,6 +38,7 @@ def _metrics_dict(port_returns, cum_returns):
         "Volatility": annualized_volatility(port_returns),
         "Sharpe": sharpe_ratio(port_returns),
         "Max Drawdown": max_drawdown(cum_returns),
+        "Total Turnover": 0.0,
     }
 
 
