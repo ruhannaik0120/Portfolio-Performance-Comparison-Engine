@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
 import plotly.graph_objects as go
 from datetime import datetime
 
@@ -29,7 +28,7 @@ st.set_page_config(
 )
 
 st.title("Systematic Portfolio Engine")
-st.caption("Risk Parity • Vol Targeting • Walk Forward Backtesting")
+st.caption("Risk Parity | Vol Targeting | Walk Forward Backtesting")
 
 # Strategy guide
 with st.expander("What do these strategies mean?", expanded=False):
@@ -108,7 +107,7 @@ target_vol = st.sidebar.slider(
 
 run_button = st.sidebar.button("Run Strategy")
 
-# execution — compute and cache in session_state
+# execution -- compute and cache in session_state
 if run_button:
     if len(tickers) < 2:
         st.error("Please enter at least 2 tickers.")

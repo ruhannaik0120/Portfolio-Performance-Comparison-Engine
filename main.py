@@ -1,5 +1,5 @@
 """
-Portfolio Comparison Engine — main entry point.
+Portfolio Comparison Engine -- main entry point.
 Runs 4 strategies, prints a clean comparison table, and shows 2 charts.
 Enable RUN_RESEARCH_MODE in config.py for regime-switching analysis.
 """
@@ -61,7 +61,7 @@ def run_research_analysis(returns, nifty_returns, rp_weights):
 
     # Risk decomposition (static RP)
     rp_risk_df = portfolio_risk_decomposition(returns, rp_weights)
-    print("\nRisk Parity — Risk Contributions:")
+    print("\nRisk Parity -- Risk Contributions:")
     print(rp_risk_df[["Weight", "Percent Contribution"]])
 
     # Rolling volatility chart
@@ -69,7 +69,7 @@ def run_research_analysis(returns, nifty_returns, rp_weights):
     fig, ax = plt.subplots(figsize=(12, 5))
     ax.plot(rolling_volatility(eq_port), label="Equal Weight")
     ax.plot(rolling_volatility(dyn_port), label="Regime Switching")
-    ax.set_title("30-Day Rolling Volatility — Research Strategies")
+    ax.set_title("30-Day Rolling Volatility -- Research Strategies")
     ax.set_ylabel("Annualized Volatility")
     ax.legend()
     ax.grid(True)
@@ -136,16 +136,16 @@ if __name__ == "__main__":
     # 4. Product charts (2 only)
     fig, axes = plt.subplots(2, 1, figsize=(12, 10), sharex=True)
 
-    # Plot 1 — Growth
+    # Plot 1 -- Growth
     for label, cum in [("Equal Weight", eq_cum), ("Static RP", rp_cum),
                        ("Vol-Targeted RP", vt_cum), ("Walk-Forward RP (Integrated)", wf_cum)]:
         axes[0].plot(cum, label=label)
-    axes[0].set_title(f"Portfolio Growth Comparison ({START_DATE[:4]}–{END_DATE[:4]})")
-    axes[0].set_ylabel("Growth of ₹1")
+    axes[0].set_title(f"Portfolio Growth Comparison ({START_DATE[:4]}-{END_DATE[:4]})")
+    axes[0].set_ylabel("Growth of 1 unit")
     axes[0].legend()
     axes[0].grid(True)
 
-    # Plot 2 — Drawdown
+    # Plot 2 -- Drawdown
     for label, dd in [("Equal Weight", eq_dd), ("Static RP", rp_dd),
                       ("Vol-Targeted RP", vt_dd), ("Walk-Forward RP (Integrated)", wf_dd)]:
         axes[1].plot(dd, label=label)

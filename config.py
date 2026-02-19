@@ -1,5 +1,5 @@
 # ============================================================
-# Portfolio Comparison Engine — Configuration
+# Portfolio Comparison Engine -- Configuration
 # ============================================================
 
 DEFAULT_TICKERS = ["RELIANCE.NS", "TCS.NS", "HDFCBANK.NS", "INFY.NS", "GOLDBEES.NS"]
@@ -22,7 +22,7 @@ RUN_RESEARCH_MODE = False
 METRIC_TOOLTIPS = {
     # Portfolio comparison metrics
     "Return": "Annualized average return over the backtest period.",
-    "Volatility": "Annualized standard deviation of daily returns — measures risk.",
+    "Volatility": "Annualized standard deviation of daily returns -- measures risk.",
     "Sharpe": "Return per unit of risk. Higher = better risk-adjusted performance.",
     "Max Drawdown": "Largest peak-to-trough loss. Shows worst-case downside.",
     # Factor analysis metrics

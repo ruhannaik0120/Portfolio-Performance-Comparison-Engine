@@ -5,3 +5,5 @@ yfinance
 scipy
 scikit-learn
 statsmodels
+streamlit
+plotly

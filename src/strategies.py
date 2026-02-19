@@ -1,5 +1,5 @@
 """
-Strategy wrappers — each returns (portfolio_returns, cumulative, metadata_dict).
+Strategy wrappers -- each returns (portfolio_returns, cumulative, metadata_dict).
 All heavy computation lives here, keeping main.py presentation-only.
 """
 
@@ -9,7 +9,6 @@ from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 
 from src.portfolio import (
-    calculate_daily_returns,
     equal_weight_portfolio,
     custom_weight_portfolio,
     walk_forward_rp_vol_targeted,
@@ -87,7 +86,7 @@ def vol_targeted_risk_parity_strategy(returns, target_vol=0.15):
 
 
 def walk_forward_risk_parity_strategy(returns, lookback=252, target_vol=0.15, transaction_cost=0.001, max_leverage=1.0):
-    """Walk-forward risk-parity with integrated vol targeting — the primary production strategy."""
+    """Walk-forward risk-parity with integrated vol targeting -- the primary production strategy."""
     port, turnover = walk_forward_rp_vol_targeted(
         returns, lookback=lookback, target_vol=target_vol,
         transaction_cost_rate=transaction_cost, max_leverage=max_leverage,
@@ -106,7 +105,7 @@ def walk_forward_risk_parity_strategy(returns, lookback=252, target_vol=0.15, tr
 def regime_switching_strategy(returns, nifty_returns, rp_weights, transaction_cost_rate=0.001):
     """
     ML regime-based dynamic allocation (research mode only).
-    Crash  → Risk Parity | Sideways → Blended | Bull → Equal Weight
+    Crash  -> Risk Parity | Sideways -> Blended | Bull -> Equal Weight
     """
     n = returns.shape[1]
     equal_weights = np.ones(n) / n

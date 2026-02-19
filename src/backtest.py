@@ -1,5 +1,5 @@
 """
-Backtest utilities — transaction cost modelling, turnover tracking.
+Backtest utilities -- transaction cost modelling, turnover tracking.
 """
 
 import numpy as np
