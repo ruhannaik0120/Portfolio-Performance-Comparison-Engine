@@ -1,19 +1,55 @@
-Investors construct portfolios by allocating capital across multiple assets. One common strategy is equal-weight allocation, where each asset receives the same proportion of investment. Another approach is custom-weight allocation, where different weights are assigned based on investor preference or conviction.
+Systematic Portfolio Engine
 
-However, these allocation strategies may result in significantly different risk-return characteristics.
+A quantitative portfolio research and backtesting engine built to evaluate systematic asset allocation strategies under realistic market conditions.
 
-This project aims to build a Portfolio Performance Comparison Engine that:
+This project implements and compares multiple portfolio construction methods with transaction cost modeling, rolling estimation, volatility targeting, and factor analysis.
 
-Computes and compares portfolio returns under equal-weight and custom-weight strategies.
+Implemented Strategies
 
-Evaluates portfolio performance using financial metrics such as cumulative return, volatility, Sharpe ratio, and maximum drawdown.
+Equal Weight
 
-Provides analytical insights into risk-return trade-offs between different allocation strategies.
+Static Risk Parity
 
-The system processes historical stock price data, calculates daily returns, constructs portfolios, and performs comparative performance analysis.
+Volatility-Targeted Risk Parity
 
-• Volatility harvesting
-• Concentration risk
-• Trend vs mean reversion
-• Risk-adjusted returns
-• Portfolio mechanics
+Walk-Forward Risk Parity (Rolling Covariance)
+
+Each strategy evaluates:
+
+Annual Return
+
+Volatility
+
+Sharpe Ratio
+
+Max Drawdown
+
+Turnover
+
+Research Features
+
+Rolling covariance estimation (removes look-ahead bias)
+
+Monthly rebalancing
+
+Transaction cost modeling
+
+Leverage control
+
+Cross-asset diversification (Equities + Gold)
+
+Alpha, Beta & R² vs NIFTY
+
+Streamlit Dashboard
+
+Interactive interface supporting:
+
+Free NSE ticker input
+
+Custom date range
+
+Multi-strategy comparison
+
+Leverage & volatility targeting sliders
+
+CSV export
